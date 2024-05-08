@@ -1,0 +1,1353 @@
+\documentclass[b5paper]{ctexart}
+\usepackage{graphicx, url, float}
+\usepackage{geometry}
+\usepackage{amssymb,amsmath}
+\usepackage{ctex}
+\usepackage{tikz}
+\usetikzlibrary{matrix}
+\usetikzlibrary{arrows}
+\usepackage{xeCJK}
+\usepackage{xcolor}
+\usepackage{rotating} % 旋转文本
+\setCJKmainfont{思源宋体 CN}
+\usetikzlibrary{positioning, shapes.geometric}
+\renewcommand{\d}{\mathop{}\!\mathrm{d}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\i}{\mathrm{i}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\arsinh}{\operatorname{arsinh}}
+\newcommand{\arcosh}{\operatorname{arcosh}}
+\newcommand{\jst}{\sum \limits_{n = 1}^{\infty}}
+\newcommand{\mjst}{\sum \limits_{n = 0}^{\infty}}
+\newcommand \jx[3]{\lim\limits_{#1 \to #2} #3}
+\newcommand \ding[2]{$\mathfrak{Def}$（\textbf{#1}）：#2}
+\newcommand {\al}{\alpha}
+\newcommand {\be}{\beta}
+\newcommand {\ga}{\gamma}
+\newcommand{\twp} [4] { \\
+	\begin{tabular} {*{2}{@{}p{7cm}}}
+		A.~#1 & B.~#2
+	\end{tabular} \\
+	\begin{tabular} {*{2}{@{}p{7cm}}}
+		C.~#3 & D.~#4
+	\end{tabular}
+} 
+\geometry{b5paper,left=2cm,right=2cm,top=2.5cm,bottom=2.5cm}
+
+\title{考研数学}
+\author{徐白玉}
+\date{January 2024}
+
+\begin{document}
+	\maketitle
+	\thispagestyle{empty}
+	\newpage
+	\setcounter{page}{1}
+	\tableofcontents
+	
+	\newpage
+	\thispagestyle{empty}
+	\begin{center}
+		\parbox[c][\textheight][c]{1cm}{\centering\fontsize{40}{36}\selectfont\textbf{微积分}}
+	\end{center}
+	
+	\newpage
+	\setcounter{page}{1}
+	
+	\section{中值定理}
+	\subsection*{一、极限的保号性}
+	我们从一道题目入手：
+	
+	\textbf{例：} 设 $f(x)$ 为连续函数，且 $\lim\limits_{x \to 0} \frac{f(x) - 2}{e^{x^2} - 1} = 2$，则有(\quad)。
+	\twp{$x = 0$ 是 $f(x)$ 的极小值点}{$x = 0$ 是 $f(x)$ 的极大值点\\}{$x = 0$ 不是 $f(x)$ 的极值点}{$(0, 2)$ 是 $f(x)$ 的拐点}
+	
+	解释：{\kaishu \textcolor{blue}{由题意，$f(x)$ 在 $x \to 0$ 处的左右导数均存在，则有 $f(0) = 2$。又由洛必达法则得：$f^{'}(0) = 0$，考察 $x \to 0^+$ 和 $x \to 0^-$ 的情况，可知，$x \to 0^+$时，$e^{x^2} - 1 > 0$，故 $f(x) > 2$； $x \to 0^-$时，$e^{x^2} - 1 > 0$，故 $f(x) > 2$。所以 $x = 0$ 为极小值点。}}
+	
+	上述问题的最后一步（分析其值为极大值还是极小值）使用了极限的\textbf{保号性}。上述的解题步骤相当于做这种题的模板。类似的还有《接力题典1800》P15的5，6题。
+	
+	\subsection*{二、如何求渐近线}
+	\textbf{水平渐近线}：若$\lim\limits_{x \to \infty} f(x) = A$，则 $y = A$ 为 $f(x)$ 的水平渐近线。
+	
+	\textbf{铅直渐近线}：若$\lim\limits_{x \to a} f(x) = \infty$ 或 $f(a - 0) = f(a + 0) = \infty$，则 $x = a$ 为 $f(x)$ 的铅直渐近线。
+	
+	\textbf{斜渐近线}：若$\lim\limits_{x \to \infty} \frac{f(x)}{x} = a(a \ne 0, a \ne \infty)$，$\lim\limits_{x \to \infty} (f(x) - ax) = b$，则$y = ax + b$ 为 $y = f(x)$ 的斜渐近线。
+	
+	\textbf{结论：}当某个曲线有了铅直渐近线，则其不可能再有斜渐近线。同结论对水平渐近线不成立。上述结论可使用极限证明。
+	
+	\subsection*{三、中值定理的证明问题}
+	
+	\subsubsection*{1. 综述}
+	中值定理的证明题大多数都是构造函数的问题，但是也存在少数的需要泰勒等技巧的隔路题。
+
+	\begin{itemize}
+		\item 欲证 $f^{(n)}(\xi) = 0$，一般是罗尔定理和拉格朗日定理的综合应用。只需找 $f^{(n - 1)}(a) = f^{(n - 1)}(b)$ 或 $\frac{a + b}{2}$ 即可。
+		
+		\item 欲证只含有中值 $\xi$ 的结论，一般要构造函数后使用拉格朗日定理。构造的过程中可能涉及添项。一般地，对于跨阶导数出现时，都需要添中间项，如 $f^{''}(x) +f(x) = f^{''}(x) +f^{'}(x) + f(x) - f^{'}(x) $，随后可使用 $e^x$ 与 $f(x)$ 的复合完成还原。
+		
+		\item 欲证中值 $\xi$ 和端点值同时出现的结论，一般要么是拉格朗日定理，要么是柯西定理。如果能构造出 $\frac{f(b) - f(a)}{b - a}$ 则是前者，构造出 $\frac{f(b) - f(a)}{g(b) - g(a)}$ 则是后者。
+		
+		\item 欲证含有多个中值 $\xi, \eta, \zeta$ 的结论，一般需要构造函数后使用两次拉格朗日或一次柯西。
+		
+		\item 如果题目中出现了三个点的同阶函数，如 $f(a), f(b), f(c)$ 或 $f^{'}(a), f^{'}(b), f^{'}(c)$，一般不考虑泰勒定理，只考虑拉格朗日；但若出现三个点的非同阶函数，如$f(a), f^{'}(b), f(c)$，一般就需要考虑泰勒定理，且定理要求在 $x = b$ 处展开。
+	\end{itemize}
+	
+	\textbf{例：} 已知 $f^{''}(x) \in C[a,b]$，证明：$\exists \xi \in (a, b)$，使得 $f(a) + f(b) - f(\frac{a + b}{2}) = \frac{(b - a)^2}{4} f^{''}(\xi)$。
+	\vspace{12pt}
+	
+	解释：{\kaishu \textcolor{blue}{由于没有“相等”，不考虑 Rolle 定理；由于没有“两个”函数，不考虑 Cauthy 定理。由于我们没有充足的点，无法 Langrange。故只能 Taylor。}}
+
+	\textbf{证明：} 由 Taylor 公式，在 $\frac{a + b}{2}$ 处有：
+	
+	$f(a) = f(\frac{a + b}{2}) - f^{'}(\frac{a + b}{2})(a - \frac{a + b}{2}) + \frac{f^{''}(\xi_1)}{2!}(a - \frac{a + b}{2})^{2}, \xi_1 \in (a, \frac{a + b}{2})$
+	
+	$f(b) = f(\frac{a + b}{2}) - f^{'}(\frac{a + b}{2})(b - \frac{a + b}{2}) + \frac{f^{''}(\xi_2)}{2!}(b - \frac{a + b}{2})^{2}, \xi_2 \in (\frac{a + b}{2}, b)$
+
+	$\therefore f(a) + f(b) = 2f(\frac{a + b}{2}) + \frac{f^{''}(\xi_1) + f^{''}(\xi_2)}{2} \frac{(b - a)^2}{4}$
+	
+	由此，只需证：$\exists \xi \in (a, b)$，使得 $f(\xi) = \frac{f^{''}(\xi_1) + f^{''}(\xi_2)}{2}$.
+	
+	由介值定理：$\exists m, M$，使得 $m \le f^{''}(x) \le M, x \in [a, b]$，所以 $m \le \frac{f^{''}(\xi_1) + f^{''}(\xi_2)}{2} \le M$，则必然有 $\xi$ 满足 $f(\xi) = \frac{f^{''}(\xi_1) + f^{''}(\xi_2)}{2}$。
+	
+	原命题得证。
+	
+	\vspace{24pt}
+	可参照《接力题典1800》的如下题目：
+	\begin{itemize}
+		\item P19 解答题1，2，3.
+		
+		\item P19 解答题6，7，8.
+		
+		\item P19 解答题9，11，13.
+		
+		\item P20 解答题14，15，16.
+		
+		\item P20 解答题18，20，21.
+	\end{itemize}
+	
+	
+	\subsubsection*{2. $f^{''}(x) > 0$ 相关证明}
+	已知 $f^{''}(x) \in C[a, b]$，则 $f^{''}(x) > 0, x \in (a, b)$ 的意义：$f(x) \ge f(x_0) + f^{'}(x_0) (x - x_0)$，当且仅当 $x = x_0$ 时，取 “=”。上述结论可以推出 $f(\frac{x_1 + x_2}{2}) < \frac{f(x_1) + f(x_2)}{2}$.
+	
+	该性质可出以下证明问题：
+	
+	\begin{itemize}
+		\item \textbf{例1：}试证：$\forall x_i \in [a, b], i = 1,2, \cdots, n$，$\forall k_i > 0, i = 1,2, \cdots, n$ 且 $k_1 + k_2 + \cdots + k_n = 1$，
+		有：$f(k_1x_1 + k_2x_2 + \cdots + k_nx_n) \le k_1f(x_1) + k_2f(x_2) + \cdots + k_nf(x_n)$.
+		
+		\textbf{证明：} 令 $x_0  = k_1x_1 + k_2x_2 + \cdots + k_nx_n$，
+		
+		由性质知：	 
+		\begin{equation}
+			\begin{split}
+				f(x_1) \ge f(x_0) + f^{'}(x_0) (x_1 - x_0) \\
+				f(x_2) \ge f(x_0) + f^{'}(x_0) (x_2 - x_0) \\
+				\cdots \\
+				f(x_n) \ge f(x_0) + f^{'}(x_0) (x_n - x_0) \\
+			\end{split}			
+		\end{equation}
+		
+		由 $k_1 + k_2 + \cdots + k_n = 1$，
+		\begin{equation}
+			\begin{split}
+				k_1f(x_1) \ge k_1f(x_0) + f^{'}(x_0) k_1 (x_1 - x_0) \\
+				k_2f(x_2) \ge k_2f(x_0) + f^{'}(x_0) k_2(x_2 - x_0) \\
+				\cdots \\
+				k_nf(x_n) \ge k_nf(x_0) + f^{'}(x_0) k_n(x_n - x_0) \\
+			\end{split}			
+		\end{equation}
+		
+		累加得：原式右边 $\ge f(x_0) + f^{'}(x_0) (k_1x_1 + k_2x_2 + \cdots + k_nx_n - x_0) = f(x_0)$,
+		
+		原命题得证。
+		
+		\item \textbf{例2：}试证：$\int_{1}^{0} f(x^2) \d x \ge f(\frac{1}{3})$.
+		
+		\textbf{证明：} 由性质知：$f(x) \ge f(\frac{1}{3}) + f^{'}(\frac{1}{3})(x - \frac{1}{3})$.
+		
+		扩充得：$f(x^2) \ge f(\frac{1}{3}) + f^{'}(\frac{1}{3})(x^2 - \frac{1}{3})$.
+		
+		积分得：$\int_{1}^{0} f(x^2) \d x \ge f(\frac{1}{3}) + f^{'}(\frac{1}{3})(\frac{1}{3} - \frac{1}{3}) = f(\frac{1}{3})$.
+		
+		原命题得证。
+		
+		\item \textbf{例3：}试证：若 $f(x) > 0$，有 $\ln \int_{1}^{0} f(x) \d x \le \int_{1}^{0} \ln f(x) \d x$.
+		
+		\textbf{证明：} 不妨设 $t_0 = \int_{1}^{0} f(x) \d x$，$\phi(t) = \ln t (t > 0)$，$\phi^{"}(t) = - \frac{1}{t^2} < 0$,
+		
+		则由性质知：$\phi(t) \le \phi(t_0) + \phi^{'}(t_0) (t - t_0)$.
+		
+		又因为 $f(x) > 0$，则 $\phi(f(x)) \le \phi(t_0) + \phi^{'}(t_0) (f(x) - t_0)$,
+		
+		积分得：$\int_{1}^{0} \phi(f(x)) \d x \le \phi(t_0) + \phi^{'}(t_0) (\int_{1}^{0} f(x)\d x - t_0) = \phi(t_0)$.
+		
+		原命题得证。
+		
+	\end{itemize}
+	
+	\subsubsection*{3. Langrange 中值定理的使用}
+	
+	当出现了充足的点的时候，我们一般要使用 Langrange 中值定理。具体题目举例如下：
+	
+	\begin{itemize}
+		\item \textbf{例1：}$f(x) \in C[a, b]$，$(a, b)$ 内可导，$f(x)$ 非直线，证明：$\exists \xi \in (a, b), s.t. |f^{'}(\xi)| > |\frac{f(b) - f(a)}{b - a}|$.
+		
+		\textbf{证明：} 不妨设 $\phi(x) = f(x) - f(a) - \frac{f(b) - f(a)}{b - a}(x - a)$,
+		
+		则 $\phi(a) = \phi(b) = 0$，由非直线得： $\phi(x) \ne 0$.
+		
+		显然 $\exists \zeta \in (a, b), s.t. \phi(\zeta) \ne 0$，不妨设 $\phi(\zeta) > 0$，
+		
+		又由 Langrange 得： $\exists \xi_1 \in (a, c), \xi_2 \in (c, b), s.t. \phi^{'}(\xi_1) = \frac{f(c) - f(a)}{c - a} > 0, \phi^{'}(\xi_2) = \frac{f(b) - f(c)}{b - c} < 0$.
+		
+		而 $\phi^{'}(x) = f^{'}(x) - \frac{f(b) - f(a)}{b - a}$，
+		
+		所以 $f^{'}(\xi_1) >\frac{f(b) - f(a)}{b - a},  f^{'}(\xi_2) < \frac{f(b) - f(a)}{b - a}$,
+		
+		当 $\frac{f(b) - f(a)}{b - a} \ge 0$，取 $\xi = \xi_1$；反之，取 $\xi = \xi_2$.
+		
+		原命题得证。
+		
+		
+	\end{itemize}
+	
+	
+	\newpage
+	\section{不定积分}
+	
+	\subsection*{一、常用不定积分结论}
+	
+	\begin{itemize}
+		\item $\int \sin 2x  \d x= \sin^2 x + C$
+		
+		\item $\int \frac{1}{1 + \cos x} \d x = \tan \frac{x}{2} + C$
+		
+		\item $\int (\sqrt{x})^{-1} \d x = 2 \sqrt{x} + C$
+		
+		\item $\int \frac{1}{1 + \sin x} \d x = \int \frac{1}{1 + \cos (x - \frac{\pi}{2})} \d (x - \frac{\pi}{2}) = \tan (\frac{x}{2} - \frac{\pi}{4}) + C$
+		
+		\item $\int \tan ^2 x \d x = \int \frac{1 - \cos^2 x}{\cos ^2 x} \d x = \tan x - x + C$
+	\end{itemize}
+	
+	\subsection*{二、徐氏口诀}
+	
+	\begin{center}
+		加常切比常$^1$，\\
+		减常对上减$^2$。\\
+		常减对上加$^3$，\\
+		顺序不要变$^4$。
+	\end{center}
+	
+	$1: \int \frac{\d x}{x^2 + a^2} = \frac{1}{a} \arctan \frac{x}{a} + C$
+	
+	$2: \int \frac{\d x}{x^2 - a^2} = \frac{1}{2a} \ln \frac{x - a}{x + a} + C$
+	
+	$3: \int \frac{\d x}{a^2 - x^2} = \frac{1}{2a} \ln \frac{a + x}{a - x} + C$
+	
+	4: 显然2、3中的“ln”函数为分母的平方差形式。因此，a和x的顺序不能变。
+	
+	
+	\begin{center}
+		加减常根形式同，\\
+		取对出和分母容$^{1,}$$^2$。\\
+		常减根是arcsin$^3$，\\
+		积分表里一条龙。
+	\end{center}
+
+	$1: \int \frac{\d x}{\sqrt{x^2 + a^2}} = \ln (x + \sqrt{x^2 + a^2}) + C$
+	
+	$2: \int \frac{\d x}{\sqrt{x^2 - a^2}} = \ln (x + \sqrt{x^2 - a^2}) + C$
+	
+	$3: \int \frac{\d x}{\sqrt{a^2 - x^2}} = \arcsin \frac{x}{a} + C$
+	
+	\newpage
+	\section{定积分}
+	
+	\subsection*{一、定积分的本质是求极限}
+	
+	根据定义，定积分的本质是
+	\begin{equation*}
+		\int_{a}^{b} f(x) \d x = \lim\limits_{\lambda \to 0} \sum_{i = 1}^{n} f(\xi_i) \Delta x_i
+	\end{equation*}
+	其中 $\lambda = \max(\Delta x_i)$ 。
+	
+	因此，对于这道题：计算 $\lim\limits_{n \to +\infty} \frac{1^2 +2^2 + \cdots + n^2}{n ^ 3}$，
+	
+	其做法是：原式 = $\lim\limits_{n \to \infty} \frac{1}{n} \sum \limits_{i = 1}^{n} (\frac{i}{n})^2 = \int_{0}^{1} x^2 \d x = \frac{1}{3}$.
+	也就是说，对于这种题，我们要根据以下步骤来做：
+	\begin{itemize}
+		\item 提一个 $\frac{1}{n}$ 出来。
+		\item 化成带 $\sum \limits_{i = 1}^{n}$ 的求和形式。
+		\item 令 $x = \frac{i}{n}$，判断积分的上下限。
+		\item 列出积分式并计算。
+	\end{itemize}
+	
+	那么现在你已经知道了该如何计算这类题目，我们来做这道题：计算 $\lim\limits_{n \to \infty} (\frac{1}{n + 1} + \frac{1}{n + 2} + \cdots + \frac{1}{n + n})$.\\
+	
+	\textbf{解：} 原式 = 
+	\begin{equation*}
+		\lim\limits_{n \to \infty} \frac{1}{n} \sum \limits_{i = 1} ^n(\frac{1}{1 + \frac{i}{n}}) = \int_{0}^{1} \frac{\d x}{1 + x}  = \ln 2.
+	\end{equation*}
+	
+	有时，这种问题还要和夹逼定理联系在一起，例如：求极限
+	\begin{equation*}
+		\lim\limits_{n \to \infty} \sum_{i = 1}^{n} (\frac{\sin ^2 \frac{i \pi}{n}}{n + \frac{1}{i}}).
+	\end{equation*}
+   
+	对分母使用夹逼定理，有：
+	
+	\begin{equation*}
+		\frac{1}{n + 1} \sum_{i = 1}^{n} \sin ^2 \frac{i \pi}{n} \le \sum_{i = 1}^{n} (\frac{\sin ^2 \frac{i \pi}{n}}{n + \frac{1}{i}}) \le \frac{1}{n} \sum_{i = 1}^{n} \sin ^2 \frac{i \pi}{n}.
+	\end{equation*}
+	
+	又因为当 $n \to \infty$ 时，
+	\begin{equation*}
+		\lim\limits_{n \to +\infty} \frac{1}{n + 1} \sum_{i = 1}^{n} \sin ^2 \frac{i \pi}{n} =\lim\limits_{n \to +\infty}  \frac{1}{n} \sum_{i = 1}^{n} \sin ^2 \frac{i \pi}{n} = \int_{0}^{1} \sin^2 \pi x \d x = \frac{1}{2}.
+	\end{equation*}
+	\subsection*{二、定积分的几个重要性质}
+	
+	\begin{itemize}
+		\item $f(x)$ 连续，则 $\int_{-a}^{a} f(x) \d x = \int_{0}^{a} (f(x) + f(-x)) \d x$.
+		
+		\item $f(x)$ 连续，则 $\int_{0}^{\frac{\pi}{2}} f(\sin x) \d x = \int_{0}^{\frac{\pi}{2}} f(\cos x) \d x$.
+		
+		\textbf{证明：}令 $x = \frac{\pi}{2} - t$ 即可。
+		\item $\int_{0}^{\frac{\pi}{2}} \sin^n x \d x = \int_{0}^{\frac{\pi}{2}} \cos^n x \d x$，
+		且有：设 $I_n = \int_{0}^{\frac{\pi}{2}} \sin^n x \d x$，则 $I_n = \frac{n - 1}{n} I_{n - 2}$，$I_0 = \frac{\pi}{2}, I_1 = 1$.\
+		
+		\textbf{证明：}将一个 $\sin x$ 挪到 $\d$ 的后边，然后分部积分即可。
+		
+		通过上述公式可得：
+		
+		\begin{equation*}
+			\int_{0}^{\frac{\pi}{2}} \sin^{10} x =  I_{10} = \frac{9}{10}\times \frac{7}{8}\times \frac{5}{6}\times \frac{3}{4}\times \frac{1}{2} I_0  
+		\end{equation*}
+		
+		\begin{equation*}
+			\int_{0}^{\frac{\pi}{2}} \sin^{9} x =  I_{9} = \frac{8}{9}\times \frac{6}{7}\times \frac{4}{5}\times \frac{2}{3}\times I_1
+		\end{equation*}
+		
+		\item $f(x)$ 连续，则$\int_{0}^{\pi} f(\sin x) \d x = 2 \int_{0}^{\frac{\pi}{2}} f(\sin x) \d x $.
+		
+		\textbf{证明：}令 $x = \frac{\pi}{2} - t$ 即可。
+		
+		\item $f(x)$ 连续，则$\int_{0}^{\pi} x f(\sin x) \d x= \frac{\pi}{2} \int_{0}^{\pi}  f(\sin x) \d x = \pi \int_{0}^{\frac{\pi}{2}}  f(\sin x) \d x$.
+		
+		\textbf{证明：}令 $x = \pi - t$ 即可。
+		
+	\end{itemize}
+	
+	\subsection*{三、广义积分敛散性的判别}
+	
+	\subsubsection*{1. 基本判别法（定义法）}
+	基本法分三步走。即，对于一个反常积分 $\int_{a}^{\infty} f(x) \d x$，
+	\begin{itemize}
+		\item 求 $f(x)$ 的原函数 $F(x)$；
+		\item 计算 $A = \lim\limits_{b \to \infty} F(b) - F(a)$，\textbf{注意}，要把该式当作以 $b$ 为参数的函数；
+		\item 如果 $A$ 为有限数，则反常积分收敛于 $A$；反之则发散。
+	\end{itemize}
+	
+	\subsubsection*{2. 区域判别法}
+	
+	区域判别法的本质是幂级数，这里分两类讨论。一类是当有问题的点是有限值；一类是无限值。
+	
+	\begin{itemize}
+		\item 若为有限值，设值为 $a$，则若 $\exists \alpha \in (0,1), s.t. \lim\limits_{x \to a^{\pm}}  (x - a) ^{\alpha} f(x)$ 存在（$a$ 在下限取 $+$，在上限取 $-$），则原积分收敛。
+		
+		\item 若为无限值，则若 $\exists \alpha \in (1, +\infty), s.t. \lim\limits_{x \to \infty}   x^{\alpha} f(x)$ 存在，则原积分收敛。
+	\end{itemize}
+	
+	上述定理还有两个“反”情况：
+	
+	\begin{itemize}
+		\item 若为有限值，设值为 $a$，则若 $\exists \alpha \in [1, \infty), s.t. \lim\limits_{x \to a^{\pm}}  (x - a) ^{\alpha} f(x) = k > 0$ 或为 $\infty$ （$a$ 在下限取 $+$，在上限取 $-$），则原积分发散。
+		
+		\item 若为无限值，则若 $\exists \alpha \in (0,1], s.t. \lim\limits_{x \to \infty}   x^{\alpha} f(x)= k > 0$ 或为 $\infty$ ，则原积分发散。
+	\end{itemize}
+	
+	\newpage
+	\section{多元函数微分学、二重积分}
+	\subsection*{一、性质互推}
+	
+	\begin{center}
+		\begin{tikzpicture}[node distance=10pt]
+			\node[draw]                        (1)   {\mbox{可微}};
+			\node[draw, below right= of 1]                        (2)   {\mbox{连续}};
+			\node[draw, below left= of 1]                        (3)   {\mbox{可偏导}};
+			
+			\draw[->] (1)  -- (2);
+			\draw[->] (1) -- (3);
+		\end{tikzpicture}
+	\end{center}
+	
+	上图中，未画出的关系均不成立。
+	
+	\subsection*{二、二重积分的对称性质}
+	对于二重积分$\iint \limits_{D} f(x, y) \d \sigma$：
+	
+	若 $D$ 关于 $x$ 轴对称，且 $f(x, -y) = -f(x, y)$，则 $\iint \limits_{D} f(x, y) \d \sigma = 0$；若 $f(x, -y) = f(x, y)$，设 $D$ 在 $x$ 轴单侧区域为 $D_1$，则$ \iint \limits_{D} f(x, y) \d \sigma = 2 \iint \limits_{D_1} f(x, y) \d \sigma$；
+
+	若 $D$ 关于 $y$ 轴对称，且 $f(-x, y) = -f(x, y)$，则 $\iint \limits_{D} f(x, y) \d \sigma = 0$；若 $f(-x, y) = f(x, y)$，设 $D$ 在 $y$ 轴单侧区域为 $D_1$，则$ \iint \limits_{D} f(x, y) \d \sigma = 2 \iint \limits_{D_1} f(x, y) \d \sigma$.
+	
+	上述性质可归纳为：\textbf{对称异可提为 0，对称同可提二倍}。
+	
+	\newpage
+	\section{三重积分}
+	\subsection*{一、三重积分的对称性质}
+	对于三重积分$\iiint \limits_{\Omega} f(x, y, z) \d v$：
+	
+	若 $\Omega$ 关于 $xoy$ 平面对称，且 $f(x, y, -z) = -f(x, y, z)$，则 $\iiint \limits_{\Omega} f(x, y, z) \d v = 0$；若 $f(x, y, -z) = f(x, y, z)$，设 $\Omega$ 在 $xoy$ 平面单侧区域为 $\Omega_1$，则 $\iiint \limits_{\Omega} f(x, y, z) \d v = 2 \iiint \limits_{\Omega_1} f(x, y, z) \d v$；
+	
+	若 $\Omega$ 关于 $xoz$ 平面对称，且 $f(x, -y, z) = -f(x, y, z)$，则 $\iiint \limits_{\Omega} f(x, y, z) \d v = 0$；若 $f(x, -y, z) = f(x, y, z)$，设 $\Omega$ 在 $xoz$ 平面单侧区域为 $\Omega_1$，则 $\iiint \limits_{\Omega} f(x, y, z) \d v = 2 \iiint \limits_{\Omega_1} f(x, y, z) \d v$；
+	
+	若 $\Omega$ 关于 $yoz$ 平面对称，且 $f(-x, y, z) = -f(x, y, z)$，则 $\iiint \limits_{\Omega} f(x, y, z) \d v = 0$；若 $f(-x, y, z) = f(x, y, z)$，设 $\Omega$ 在 $yoz$ 平面单侧区域为 $\Omega_1$，则 $\iiint \limits_{\Omega} f(x, y, z) \d v = 2 \iiint \limits_{\Omega_1} f(x, y, z) \d v$。
+	
+	上述性质依然可以归纳为：\textbf{对称异可提为 0，对称同可提二倍}。
+	
+	\subsection*{二、柱面坐标}
+	对于三重积分$\iiint \limits_{\Omega} f(x, y, z) \d v$，令
+	\[
+		\left\{
+		\begin{aligned}
+			& x = r \cos \theta \\
+			& y = r \sin \theta \\
+			& z = z
+		\end{aligned}
+		\right.
+	\]
+	可以做如下变换：
+	\[
+	\iiint\limits_{\Omega} f(x, y, z) \d v = \iiint\limits_{\Omega} f(r \cos\theta, r \sin\theta, z) r \d r \d \theta \d z
+	\]
+	其中，$\theta \in [0, 2 \pi]$。
+	
+	\subsection*{三、球面坐标}
+	对于三重积分$\iiint \limits_{\Omega} f(x, y, z) \d v$，令
+	\[
+	\left\{
+	\begin{aligned}
+		& x = r \cos \phi \cos \theta \\
+		& y = r \cos \phi \sin \theta \\
+		& z = r \sin \phi
+	\end{aligned}
+	\right.
+	\]
+	可以做如下变换：
+	\[
+	\iiint\limits_{\Omega} f(x, y, z) \d v = \iiint\limits_{\Omega} f(r \cos \phi \cos \theta, r \cos \phi \sin \theta, r \sin \phi) r^{2} \sin \phi \d r \d \theta \d \phi 
+	\]
+	其中，$\theta \in [0, 2 \pi], \phi \in [0, \pi]$。
+	
+	
+	
+	\newpage
+	\section{曲线、曲面积分}
+	\subsection*{一、边界与区域的关系}
+	
+	\begin{itemize}
+		\item 一维：Newton-Leibniz 公式：$\int_{a}^{b} f(x) \d x = F(b) - F(a)$，其中 $F(x) = \int f(x) \d x$.
+		
+		\item 二维：Green 公式：$\oint_{L} P \d x + Q \d y = \iint \limits_{D} (\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y}) \d \sigma$ .
+		
+		\item 三维：Guass 公式：$\iint_ {\Sigma} P \d y \d z + Q \d z \d x + R \d x \d y = \iiint \limits_{\Omega} (\frac{\partial P}{\partial x} + \frac{\partial Q}{\partial y} + \frac{\partial R}{\partial z}) \d v$
+	\end{itemize}
+	
+	\subsection*{二、曲线、曲面积分的对称性质}
+	
+	\begin{itemize}
+		\item 对于对弧长的曲线积分，积分情况满足“对称异可提为 0，对称异相等二倍”。其中“对称”指曲线关于轴对称，“异”指被积函数满足良好性质。
+		
+		\item 对于对面积的曲面积分，积分情况满足“对称异可提为 0，对称异相等二倍”。其中“对称”指曲面关于坐标平面对称，“异”指被积函数满足良好性质。
+		
+		\item 对于对坐标的曲面积分，其性质正好相反，是“对称异可提二倍，对称异相等为 0”。其中“对称”指曲面关于\textbf{被积}坐标平面对称，“异”指被积函数满足良好性质。
+		
+		\item 我们不讨论对坐标的曲线积分的类似性质。
+	\end{itemize}
+	
+	\newpage
+	\section{级数}
+	
+	\subsection*{一、级数的本质是求极限}
+	
+	我们先来举个例子：$1 = 0.\dot{9} = 0.9 + 0.99 + 0.999+ \cdots$，于是就等于 $\jst 9 \times 10^{-n}$，这就是一种常数项级数。
+	
+	因此，我们可以窥见：对于常数项数列 {$a_n$}，其前 $n$ 项和为 $S_n$，则：
+	
+	\begin{itemize}
+		\item $S_n$ 与级数 $\jst a_n$ 不同。
+		
+		\item $\lim\limits_{n \to \infty} S_n = \jst a_n$。
+	\end{itemize}
+	
+	也就是说，级数是一种极限。如果极限存在，且值为 $A$，称级数收敛于 $A$；若极限不存在，称级数发散。根据极限的性质，我们当然可以根据极限的性质推出级数的一些性质：
+	
+	\begin{itemize}
+		\item $\jst a_n = A, \jst b_n = B$，则 $\jst a_n \pm b_n = A \pm B$.
+		
+		\item $\jst a_n = S, k \in \mathbb{R}$，则 $\jst k a_n = k S$.
+		
+		\item 将一个级数添加、删除、替换有限项，其敛散性不变（可使用反面证明级数发散，如级数 $1 - 1 + 1 - 1 + \cdots$，$S_{2n} = 0, S_{2n + 1} = 1$，求极限时，二者不相等，故发散）。
+		
+		\item 级数在添括号之后得到的级数和原级数不是同一个级数，该行为会使得级数的收敛性\textbf{不降低}。即：收敛的级数添加括号之后必然收敛；发散的级数添加括号之后\textbf{可能}收敛。
+		
+		\item 级数收敛的一个必要条件：$\jst a_n$ 收敛，则 $\lim\limits_{n \to \infty} a_n \to 0$（反过来不成立，如“三江级数”\footnote{调和级数。}）.
+		
+	\end{itemize}
+	
+	根据第四条性质：如果一个级数添加括号之后发散，则其必然发散；若其添加括号之后收敛，不能说明其是否收敛。
+	
+	下面证明第五条性质：设 $S_n = a_1 + a_2 + \cdots + a_n$，且 $\lim\limits_{n \to \infty} S_n = S$，则 $a_n = S_n - S_{n - 1}$，于是 $\lim\limits_{n \to \infty} a_n = \lim\limits_{n \to \infty} S_n - \lim\limits_{n \to \infty} S_{n - 1} = S - S = 0$，原命题得证。 
+	
+	
+	
+	\subsection*{二、常数项级数}
+	
+	\subsubsection*{1. 常数项级数敛散性基本结论}
+	
+	\begin{itemize}
+		\item 等比数列形成的级数（几何级数） $\jst aq^n$，当公比 $|q| \ge 1$，级数发散；当公比 $|q| < 1$，级数收敛于 $\frac{a}{1 - q}$.
+		
+		\item 对于 $p-$级数 $\jst \frac{1}{n^p}$，当 $p  = 1$ 时，发散，此级数称“调和级数”；$p \in (0, 1)0$，大于调和级数，发散；$p \in (1, +\infty)$ 时，收敛。
+
+	\end{itemize}
+	
+	\textbf{证明}调和级数发散：$x \in [1, 2]$，显然有 $1 \ge \frac{1}{x}$，即 $1 \ge \int_{1}^{2} \frac{1}{x} \d x$，又有 $\frac{1}{2} >  \int_{2}^{3} \frac{1}{x} \d x$......累加可得 $\jst \frac{1}{n} \ge \lim\limits_{n \to \infty} \int_{n}^{1} \frac{1}{x} \d x$ = $\lim\limits_{n \to \infty}\ln x |_{1}^{n}$，发散。
+	
+	\textbf{证明 }$p > 1$ 时，$p-$级数收敛：证明：$x \in [1, 2], \frac{1}{2^p} \le \frac{1}{x^p}$，即 $\frac{1}{2^p} \le \int_{1}^{2} \frac{1}{x^p} \d x$，同理有 $\frac{1}{n^p} \le \int_{n - 1}^{n} \frac{1}{x^p} \d x$。累加得 $S_n \le 1 + \int_{1}^{n} x^{-p} \d x  = 1 + \frac{1}{p - 1} (1 - n^{1 - p}) \le 1 + \frac{1}{1 - p}$，收敛。
+	
+	\subsubsection*{2. 正项级数的审敛法}
+	
+	对正项级数 $\jst a_n (\forall n, a_n \ge 0)$，显然 $S_n$ 单调递增。当 $S_n$ 没有上界时，显然发散；当 $S_n$ 有上界 $M$ 时，$\lim\limits_{n \to \infty} S_n$ 存在，则级数收敛。
+	
+	\vspace{12pt}
+	
+	正项级数有以下基本的审敛法：
+	\begin{itemize}
+		\item 基本比较审敛法：若 $a_n \ge 0, b_n \ge 0$，有：
+		\begin{itemize}
+			\item $a_n \le b_n$，$\jst b_n$ 收敛，则 $\jst a_n$ 更收敛。
+			
+			\item $a_n \ge b_n$，$\jst b_n$ 发散，则 $\jst a_n$ 更发散。
+		\end{itemize}
+		
+		\item 极限比较审敛法：若 $a_n \ge 0, b_n \ge 0$，有：
+		\begin{equation}
+			\lim\limits_{n \to \infty} \frac{b_n}{a_n} = l, 0 < l < + \infty
+		\end{equation}
+		则 $\jst a_n$ 和 $\jst b_n$ 敛散性相同（要收敛一起收敛，要发散一起发散）。
+		
+		\item 比值审敛法：若 $ \lim\limits_{n \to \infty} \frac{a_{n + 1}}{a_n} = \rho$，则 $\rho < 1$ 时，$a_n$ 收敛；$\rho > 1$ 时，$a_n$ 时发散；$\rho = 1$ 时，无法判断。
+		
+		\textbf{一般地，如果遇到阶乘，就要用比值审敛法。}
+		
+		\item D'Alembert 判别法（根值审敛法）：若 $\lim\limits_{n \to \infty} \sqrt[n]{a_n} = \rho$，则 $\rho < 1$ 时，$a_n$ 收敛；$\rho > 1$ 时，$a_n$ 时发散；$\rho = 1$ 时，无法判断。
+		
+		\textbf{一般地，如果遇到 $a^n$ 或 $n^n$，就要用 D'Alembert 判别法。}
+	\end{itemize}
+	
+	\textbf{证明}极限比较审敛法：不妨取 $\epsilon = \frac{l}{2} > 0$，则由题目极限知：$\exists N > 0$，使得 $n > N$ 时，$|\frac{b_n}{a_n} - l| < \frac{l}{2}$，于是 $\frac{l}{2} < \frac{b_n}{a_n} < \frac{3l}{2}$.
+	
+	假设 $\jst a_n$ 收敛，则 $\jst \frac{3}{2} l a_n$ 收敛，即 $\jst b_n$ 收敛；假设 $\jst b_n$ 收敛，则 $\jst \frac{1}{2} l a_n$ 收敛，即 $\jst a_n$ 收敛.
+	
+	同理可得，发散情况下也成立。
+	
+	\vspace{12pt}
+	
+	\textbf{证明}比值审敛法：不妨取 $\epsilon = \frac{1 - \rho}{2} > 0$，则由题目极限知：$\exists N > 0$，使得 $n > N$ 时，$|\frac{a_{n + 1}}{a_n} - \rho| < \frac{l - \rho}{2}$，于是有 $\frac{a_{n + 1}}{a_n} < \frac{1 + \rho}{2}$.
+	
+	设 $r = \frac{1 + \rho}{2}$，显然 $0 < r < 1$，于是 $a_{n + 1} < r a_n$，从 $a_{N + 2} < r a_{N + 1}$ 开始累加得 $\sum \limits_{n = N + 2}^{\infty} a_n < a_{N + 1} \jst r^n$，收敛。于是原级数也收敛。
+	
+	同理，在 $\rho > 1$ 时，对应的 $r > 1$。此时有 $\sum \limits_{n = N + 2}^{\infty} a_n > a_{N + 1} \jst r^n$，发散。于是原级数也发散。
+	
+	\vspace{12pt}
+	
+	\textbf{例1：}判断 $\jst (\frac{n}{n + 1}) ^n$ 的敛散性。
+	
+	\textbf{解：}由于 $\lim\limits_{n \to \infty} \sqrt[n]{a_n} = \lim\limits_{n \to \infty} (\frac{n}{n + 1})^n =  \lim\limits_{n \to \infty} \frac{1}{(1 + \frac{1}{n})^n} = \frac{1}{e} < 1$，故收敛。
+	
+	\subsubsection*{3. 交错级数的审敛法}
+	
+	交错级数：$\jst (-1)^{n - 1} u_n$，其中 $u_n > 0$，即：首项为正。显然，在添加了负号之后，级数的收敛性\textbf{不降低}。也就是说，原来不收敛的级数在隔项添负号之后可能就会收敛，这叫做\textbf{条件收敛}；而原来就收敛的级数在隔项添负号之后必然收敛，这叫做\textbf{绝对收敛}。
+	
+	交错级数收敛的充分不必要条件(Leibniz 判别法)：$u_n$ 单调递减且$\lim\limits_{n \to \infty} u_n = 0$，则原交错级数收敛，且其和不超过 $u_1$.
+	
+	交错级数收敛的一个必要条件：$\lim\limits_{n \to \infty} u_n = 0$.
+	
+	\subsection*{三、幂级数}
+	
+	\subsubsection*{1. 函数项级数}
+	
+	如果 ${u_n(x)}$ 为函数列，则 $\jst u_n(x)$ 称为函数项级数。对于一个函数项级数 $\jst x^n = x + x^2 + \cdots$，当 $x = \frac{2}{3}$ 时，原级数为等比级数，收敛，因此 $x = \frac{2}{3}$ 为原级数的一个\textbf{收敛点}；同理，$x = 2$ 为原级数的一个\textbf{发散点}。
+	
+	函数项级数 $\jst u_n(x)$ 的一切收敛点组成的集合叫原级数的\textbf{收敛域}，记为 $D$，则 $\forall x \in D$，$\jst u_n(x) = S(x)$，则 $S(x)$ 叫原函数项级数的和函数。
+	
+	\subsubsection*{2. 幂级数及其基本定理}
+	
+	\begin{itemize}
+		\item 幂级数的定义：形如 $\mjst a_nx^n = a_0 + a_1 x + a_2 x^2 + \cdots$  或 $\mjst a_n (x - x_0 )^2 = a_0 + a_1 (x - x_0) + a_2 (x - x_0 )^2 + \cdots$ 的函数项级数叫幂级数。例如，$1 + x + x^2 + \cdots = \sum \limits_{n = 0}^{\infty} x^n = \frac{1}{1 - x}$，当且仅当 $x \in (-1, 1)$，此时 $x$ 的范围就是该幂级数的收敛域。
+		
+		\item Abel 定理：对幂级数 $\mjst a_n x^n$，
+		
+		\begin{itemize}
+			\item 若 $x = x_0 \ne 0$ 时，$\mjst a_n x_0^n$ 收敛，则当 $|x| < |x_0|$ 时，原级数都收敛，且是绝对收敛。
+			
+			\item 若 $x = x_1$ 时，$\mjst a_n x_1^n$ 发散，则当 $|x| > |x_1|$ 时，原级数都发散。
+		\end{itemize}
+		
+		由上述性质，显然对于幂级数 $\mjst a_n x^n$，必然有 $R(R > 0)$ 使得 $|x| < R$，原幂级数绝对收敛；$|x| > R$，原幂级数发散（$x = R$，收敛性不明）。这样的 $R$ 叫原幂级数的\textbf{收敛半径}。
+		
+		\item 比值幂级数审敛定理：对幂级数 $\mjst a_n x^n$，设 $\jx{n}{\infty}{|\frac{a_{n + 1}}{a_n}|} = \rho$，
+			\begin{itemize}
+				\item 若$\rho = 0$，则 $R = \infty$；
+				
+				\item 若 $\rho = +\infty$，则 $R = 0$；
+				
+				\item 若 $\rho  \enspace \mbox{为有限正数}$，则 $R = \frac{1}{\rho}$.
+			\end{itemize}
+		
+		\item D'Alembert 幂级数审敛定理：对幂级数 $\mjst a_n x^n$，设 $\jx{n}{\infty}{\sqrt[n]{|a_n|}} = \rho$，
+			\begin{itemize}
+				\item 若$\rho = 0$，则 $R = \infty$；
+				
+				\item 若 $\rho = +\infty$，则 $R = 0$；
+				
+				\item 若 $\rho  \enspace \mbox{为有限正数}$，则 $R = \frac{1}{\rho}$.
+			\end{itemize}
+			
+		\item 隔二项幂级数审敛定理：对于幂级数 $\mjst a_nx^{2n + 1}$，设 $\jx{n}{\infty}{|\frac{a_{n + 1}}{a_n}|} = \rho$，
+			\begin{itemize}
+				\item 若$\rho = 0$，则 $R = \infty$；
+				
+				\item 若 $\rho = +\infty$，则 $R = 0$；
+				
+				\item 若 $\rho  \enspace \mbox{为有限正数}$，则 $R = \sqrt{\frac{1}{\rho}}$.
+			\end{itemize}
+		
+		\end{itemize}
+
+	\textbf{证明}Abel定理：先证绝对收敛性质。
+	
+	由 $\mjst a_n x_0^n$ 收敛得，$\jx{n}{\infty}{a_nx_0^n} = 0$，则必然 $\exists M > 0$，使得 $|a_n x_0^n| \le M$.
+	
+	当 $|x| < |x_0|$ 时，$0 \le |a_nx^n| \le |a_nx_0^n| |\frac{x}{x_0}|^n \le M |\frac{x}{x_0}|^n$，于是正项级数 $\mjst M|\frac{x}{x_0}|^n$ 收敛。原命题得证。
+	
+	接下来证发散性质。反证：假设 $\exists |x_2| > |x_1|$，使得 $\mjst a_n x_2^n$ 收敛，由绝对收敛性质得：$|x| < |x_2|$ 时，原级数绝对收敛，与已知矛盾。原命题得证。
+	
+	在求幂级数收敛域的时候，当计算了收敛半径之后，还要特判两个端点 $-R, R$，最后的收敛域有四种可能的情况：$[-R, R], (-R, R), (-R, R], [-R, R)$.
+	
+	\subsubsection*{3. 幂级数和函数的分析性质}
+	
+	设 $\mjst a_n x^n$ 的和函数为 $S(x)$，则有以下性质：
+	
+	\begin{itemize}
+		\item 逐项可积性：$S(x)$ 在其收敛域上可积，且有：
+		\begin{equation*}
+			\int_{0}^{x} S(t) \d t = \int_{0}^{x} (\mjst a_n t^n) \d t = \mjst \int_{0}^{x} a_n t^n \d t = \mjst \frac{a_n}{n + 1} x^{n + 1}.
+		\end{equation*}
+		 且 $\mjst a_n x^n$ 和 $\mjst \frac{a_n}{n + 1} x^{n + 1}$ 的收敛半径相同，收敛域不一定相同。
+		 
+		\item 逐项可导性：$S(x)$ 在 $(-R, R)$ 内可导，且有：
+		\begin{equation}
+			(\mjst a_nx^n)' = \mjst (a_nx^n)' = \mjst na_n x^{n - 1}.
+		\end{equation}
+		且 $\mjst a_n x^n$ 和 $\mjst na_nx^{n - 1}$ 的收敛半径相同，收敛域不一定相同。
+	\end{itemize}
+	
+	\subsubsection*{4. 函数展开成幂级数}
+	
+	例如，我们可以知道：$x \in (-1, 1)$ 时，有：
+	\begin{equation*}
+		1 + x + x^2 + \cdots = \frac{1}{1 - x}.
+	\end{equation*}
+	那么显然在 $x \in (-1, 1)$ 时，也有：
+	\begin{equation*}
+		\frac{1}{1 - x} = 1 + x + x^2 + \cdots.
+	\end{equation*}
+	后者的行为，就是函数展开成幂级数的行为。
+	
+	函数展开成幂级数的方法有以下几种：
+	\begin{itemize}
+		\item 公式法：设 $f(x)$ 在 $x = x_0$ 邻域内任意阶可导，则 $f(x)$ 在 $x = x_0$ 邻域内能够展开成 $\mjst \frac{f^{(n)}(x_0)}{n!}(x - x_0)^n$ 的充分条件是 $\jx{n}{\infty}{R_n(x)} = 0$，其中 $R_n(x)$ 为 Taylor 公式的余项。上述级数叫 Taylor 级数。特别地，当 $x_0 = 0$ 时，即级数为 $\mjst \frac{f^{(n)}(0)}{n!} x^n$ 时，原级数叫 Maclaurin 级数。
+		
+		函数展开成幂级数的一些一级结论：
+		\begin{itemize}
+			\item $e^x = 1 + x + \frac{x^2}{2} + \cdots = \mjst \frac{x^n}{n!}, x \in \R$;
+			
+			\item $\sin x = x - \frac{x^3}{3!} + \frac{x^5}{5!} + \cdots = \mjst (-1)^{n} \frac{x^{2n + 1}}{(2n + 1)!}, x \in \R$;
+			
+			\item $\cos x = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} = \mjst (-1)^n \frac{x^{2n}}{(2n)!}, x \in \R$;
+			
+			\item $\ln (1 + x) = x - \frac{x^2}{2} + \frac{x^3}{3} + \cdots = \jst (-1)^{n - 1} \frac{x^{n}}{n}, x \in (-1, 1]$;
+			
+			\item $- \ln (1 - x) = x + \frac{x^2}{2} + \frac{x^3}{3} + \cdots = \jst \frac{x^{n}}{n}, x \in [-1, 1)$;
+			
+			\item $\frac{1}{1 - x} = 1 + x + x^2 + \cdots = \mjst x^n, x \in (-1, 1)$;
+			
+			\item $\frac{1}{1 + x} = 1 - x + x^2 + \cdots = \mjst (-x)^n, x \in (-1, 1)$;
+		\end{itemize}
+		
+		
+		\item 间接法：使用工具——上述七个公式、逐项可导性、逐项可积性。
+	\end{itemize}
+	
+	\textbf{例2：}将 $f(x) = \frac{1}{1 + x}$ 展开成 $(x - 1)$ 的幂级数。
+	
+	\textbf{解：} $f(x) = \frac{1}{2 + x - 1} = \frac{1}{2} \cdot \frac{1}{1 + \frac{x - 1}{2}} = \frac{1}{2} \mjst (-1)^n (\frac{x - 1}{2})^n, x \in (-1, 3)$.
+	
+	\subsubsection*{5. 求幂级数的和函数}
+	
+	求和函数的时候，原幂级数分为 $n$ 不在分母和 $n$ 在分母两种情况。对于前者，我们一般要利用逐项可导性；对于后者，大多需要做分类讨论。
+	
+	\vspace{12pt}
+	
+	\textbf{例3：}求 $\mjst (2n + 1) x^n$ 的和函数 $S(x)$。
+	
+	\textbf{解：}先求收敛半径：$\jx{n}{\infty}{|\frac{a_{n + 1}}{a_n}|} = 1$.
+	
+	当 $x = \pm 1$ 时，$(2n + 1) (\pm 1)^n$ 在 $n \to \infty$ 时极限不存在，故收敛域为 $(-1, 1)$.
+	
+	接下来，拆：原式$ = 2 \jst nx^n + \mjst x^n = 2x \jst nx^{n - 1} + \frac{1}{1 - x}$,
+	
+	\textcolor{blue}{\kaishu 解释：由于我们求的是 $n$ 的和，所以 $x$ 可以提，但是 $n$ 不能提。}
+	
+	而又有：$2x\jst nx^{n - 1} = 2x\jst (x^n)' = 2x(\jst x^n)' = 2x(\frac{1}{1 - x} - 1)' = 2x (\frac{x}{1 - x})'$
+	
+	$ = 2x \frac{1}{(1 - x)^2}$,
+	
+	故原式 = $\frac{2x}{(1 - x)^2} + \frac{1}{1 - x} = \frac{1 + x}{(1 - x)^2}$.
+	
+	\vspace{12pt}
+	
+	\textbf{例4：}求 $\jst \frac{x^n}{n(n + 1)}$ 的和函数 $S(x)$.
+	
+	\textbf{解：}先求收敛半径：$\jx{n}{\infty}{|\frac{a_{n + 1}}{a_n}|} = 1$.
+	
+	当 $x = \pm 1$ 时，原级数 $< \frac{1}{n^2}$，绝对收敛。故收敛域为 $[-1, 1]$.
+	
+	对于原幂级数，显然 $S(0) = 0$;
+	
+	当 $x \ne 0$ 时，有：$S(x) = \jst \frac{x^n}{n} - \jst \frac{x^n}{n + 1} = -\ln (1 - x) - \frac{1}{x} \jst \frac{x^{n + 1}}{n + 1} = -\ln (1 - x) - \frac{1}{x} (-\ln (1 - x) - x) = (\frac{1}{x} - 1) \ln(1 - x) + 1$,
+	$x \in [-1, 0) \cup (0, 1)$;
+	
+	当 $x = 1$ 时，$\jx{n}{\infty}{S_n} = 1$，即：$S(1) = 1$.
+	
+	\vspace{12pt}
+	
+	综上，$$ S(x)=\left\{
+	\begin{aligned}
+		0, \quad &x = 0; \\
+		(\frac{1}{x} - 1) \ln(1 - x) + 1, \quad &x \in [-1, 0) \cup (0, 1); \\
+		1, \quad &x = 1.
+	\end{aligned}
+	\right.
+	$$
+	
+	\subsection*{四、Fourier 级数}
+	
+	在一切开始之前，我们需要知道，任意的单一周期信号都能使用正余弦函数的方式来表示：$f(t) = a_n \cos n \omega t + b_n \sin n \omega t$，则对于一个任意的以 $2\pi$ 为周期的信号 $f(x)$，提出以下问题：
+	
+	\begin{itemize}
+		\item $f(x)$ 可否分解为 $\frac{a_0}{2} + \jst (a_n \cos nx + b_n \sin nx)$？在信号处理中，$\frac{a_0}{2}$ 叫直流成分，$a_1 \cos x + b_1 \sin x$ 叫一次谐波；$a_2 \cos 2x + b_2 \sin 2x$ 叫二次谐波，依此类推。
+		
+		\item 如果可以分解，则 $f(x)$ 与三角级数 $\frac{a_0}{2} + \jst (a_n \cos nx + b_n \sin nx)$ 有什么关系？
+	\end{itemize}
+	
+	\subsubsection*{1. 三角函数系及其正交性}
+	
+		对三角函数系 $\cos x, \sin x, \cos 2x, \sin 2x, \cdots, \cos nx, \sin nx, \cdots$ 在 $[-\pi, \pi]$ 上积分，则有：
+		
+		\begin{equation*}
+			\begin{split}
+				\int_{-\pi}^{\pi} 1 \times \cos nx \d x = 0 & \quad (n \in \N^*),  \\ 
+				\int_{-\pi}^{\pi} 1 \times \sin nx \d x = 0 & \quad (n \in \N^*), \\
+				\int_{-\pi}^{\pi} \sin mx \cos nx \d x = 0 & \quad (m, n \in \N^*), \\
+				\int_{-\pi}^{\pi} \cos mx \cos nx \d x = 0 & \quad (m, n \in \N^*, m \ne n), \\
+				\int_{-\pi}^{\pi} \sin mx \sin nx \d x = 0 & \quad (m, n \in \N^*, m \ne n).
+			\end{split}
+		\end{equation*}
+		
+		又有：
+		\begin{equation*}
+			\begin{split}
+				\int_{-\pi}^{\pi} 1 \d x = 2\pi &, \\
+				\int_{-\pi}^{\pi} \cos^2 nx \d x = \pi & \quad(n \in \N^*), \\
+				\int_{-\pi}^{\pi} \sin^2 nx \d x = \pi & \quad(n \in \N^*). \\
+			\end{split}
+		\end{equation*}
+		
+	也就是说，对于一个三角函数系，有以下结论：
+	
+	$$
+	\int_{-\pi}^{\pi} \cos mx \cos nx \d x=\left\{
+	\begin{aligned}
+		2\pi , \quad & m = n = 0; \\
+		\pi, \quad&  m = n \ge 1; \\
+		0, \quad &  m \ne n.
+	\end{aligned}
+	\right.
+	$$
+	
+	$$
+	\int_{-\pi}^{\pi} \sin mx \sin nx \d x=\left\{
+	\begin{aligned}
+		\pi, \quad&  m = n \ge 1; \\
+		0, \quad &  m \ne n.
+	\end{aligned}
+	\right.
+	$$
+	
+	通俗记忆：任意\textbf{交叉}为 $0$，任意\textbf{重复}要么为 $2\pi$，要么为 $\pi$，这就是\textbf{正交性}。
+	
+	\subsubsection*{2. 周期为 $2\pi$ 的函数展开成 Fourier 级数}
+	
+	设 $f(x)$ 是以 $2\pi$ 为周期的周期函数，则有以下定理：
+	
+	\begin{itemize}
+		\item \textbf{Dirichlet 充分条件}：若 $f(x)$ 满足两个条件：
+		\begin{itemize}
+			\item 在一个周期内连续或存在有限个第一类间断点；
+			
+			\item 在一个周期内仅有有限个极值点.
+		\end{itemize}
+		
+		则有以下两个结论：
+		\begin{itemize}
+			\item $f(x)$ 可以展开成 $\frac{a_0}{2} + \jst (a_n \cos nx + b_n \sin nx)$ 且 $a_0 = \frac{1}{\pi} \int_{-\pi}^{\pi} f(x) \d x$，$a_n = \frac{1}{\pi} \int_{-\pi}^{\pi} f(x)\cos nx \d x, n \in \N^*$，$b_n = \frac{1}{\pi} \int_{-\pi}^{\pi} f(x)\sin nx \d x, n \in \N^*$.
+			
+			\item 当 $x$ 是 $f(x)$ 连续点时，$f(x) = \frac{a_0}{2} + \jst (a_n \cos nx + b_n \sin nx)$；当 $x$ 是 $f(x)$ 间断点时，$\frac{f(x + 0) + f(x - 0)}{2} = \frac{a_0}{2} + \jst (a_n \cos nx + b_n \sin nx)$.
+		\end{itemize}
+	\end{itemize}
+	
+	\vspace{12pt}
+	
+	\textbf{例5：} $f(x)$ 以 $2\pi$ 为周期，$f(x)$ 在 $[-\pi, \pi)$ 上表达式为
+	$$
+	f(x)=\left\{
+	\begin{aligned}
+		-1, \quad&  x \in [-\pi, 0); \\
+		1, \quad &  x \in [0, \pi).
+	\end{aligned}
+	\right.
+	$$
+	将 $f(x)$ 展成 Fourier 级数。
+	
+	\textbf{解：} 函数在一周期内大致图像如下：
+	
+	\begin{center}
+		\begin{tikzpicture}[scale=1.0]
+			% Axes
+			\draw[->] (-3.5,0) -- (3.5,0) node[right] {$x$};
+			\draw[->] (0,-1.5) -- (0,1.5) node[above] {$f(x)$};
+			% Function
+			\draw[domain=-3.1416:0,smooth,variable=\x,thick] plot ({\x},{-1});
+			\draw[domain=0:3.1416,smooth,variable=\x,thick] plot ({\x},{1});
+			% Dotted lines
+			\draw[dotted] (0,-1) -- (-3.1416,-1) node[left] {$-1$};
+			\draw[dotted] (0,1) -- (3.1416,1) node[right] {$1$};
+			\draw[dotted] (-3.1416,0) -- (-3.1416,-1) node[below] {$-\pi$};
+			\draw[dotted] (3.1416,0) -- (3.1416,1) node[above] {$\pi$};
+		\end{tikzpicture}
+	\end{center}
+
+	显然 $f(x)$ 的间断点是 $x = k \pi(k \in \Z)$.
+	
+	$a_0 = \frac{1}{\pi} \int_{-\pi}^{\pi} f(x) \d x = 0$,
+	
+	$a_n = \frac{1}{\pi} \int_{-\pi}^{\pi} f(x)\cos nx \d x = 0, n \in \N^*$,
+	
+	$b_n = \frac{1}{\pi} \int_{-\pi}^{\pi} f(x)\sin nx \d x = \frac{2}{\pi} \int_{0}^{\pi} \sin nx \d x = \frac{2(1 - (-1)^n)}{n\pi}, n \in \N^*$，偶数项为 $0$，奇数项为 $\frac{4}{n\pi}$.
+	
+	于是 $f(x) = \frac{4}{\pi} \mjst 
+	\frac{\sin (2n + 1)x}{2n + 1}$, $x \in \R / \{k\pi | k \in \Z\}$.
+	
+	当 $x = k\pi(k \in \Z)$ 时，$\frac{\sin (2n + 1)x}{2n + 1} = \frac{f(k\pi - 0) + f(k\pi + 0)}{2} = 0$.
+
+	\vspace{12pt}
+
+	\textbf{例6：} $f(x)$ 以 $2\pi$ 为周期，$f(x)$ 在 $[-\pi, \pi)$ 上表达式为
+	$$
+	f(x)=\left\{
+	\begin{aligned}
+		0, \quad&  x \in [-\pi, 0); \\
+		x, \quad &  x \in [0, \pi).
+	\end{aligned}
+	\right.
+	$$
+	将 $f(x)$ 展成 Fourier 级数。
+	
+	\textbf{解：} 函数在一周期内大致图像如下：
+	
+	\begin{center}
+		\begin{tikzpicture}[scale=1.0]
+			% Axes
+			\draw[->] (-3.5,0) -- (3.5,0) node[right] {$x$};
+			\draw[->] (0,-1.5) -- (0,3.5) node[above] {$f(x)$};
+			% Function
+			\draw[domain=-3.1416:0,smooth,variable=\x,thick] plot ({\x},{0});
+			\draw[domain=0:3.1416,smooth,variable=\x,thick] plot ({\x},{\x});
+			% Dotted lines
+			\draw[dotted] (0,0) -- (0,0) node[below] {$0$};
+			\draw[dotted] (-3.1416,0) -- (-3.1416,-0.1) node[below] {$-\pi$};
+			\draw[dotted] (3.1416,0) -- (3.1416,-0.1) node[below] {$\pi$};
+		\end{tikzpicture}
+	\end{center}
+	
+	显然 $f(x)$ 的间断点是 $x = (2k + 1)\pi, (k \in \Z)$.
+	
+	$a_0 = \frac{1}{\pi} \times \frac{\pi^2}{2} = \frac{\pi}{2}$,
+	
+	$a_n = \frac{1}{\pi} \int_{-\pi}^{\pi} f(x) \cos nx \d x = \frac{1}{\pi} \int_{0}^{\pi} x\cos nx \d x = \frac{(-1)^n - 1}{n^2 \pi}$，偶数项为 $0$，奇数项为 $- \frac{2}{n^2 \pi}$.
+	
+	$b_n = \frac{1}{\pi} \int_{-\pi}^{\pi} f(x) \sin nx \d x = \frac{1}{\pi} \int_{0}^{\pi} x\sin nx \d x = \frac{(-1)^{n + 1}}{n}$.
+	
+	于是 $n$ 为奇数时，
+	$f(x) =\frac{\pi}{4} + \mjst(-\frac{2}{\pi} \frac{1}{(2n+1)^2} \cos nx + \frac{(-1)^n}{n} \sin nx) , x \in \R / \{(2k + 1)\pi | k \in \Z\}$ ；$n$ 为偶数时，$f(x) = \frac{\pi}{4} + \mjst(\frac{(-1)^n}{n} \sin nx) , x \in \R / \{(2k + 1)\pi | k \in \Z\}$.
+	
+	当 $x = (2k + 1) \pi, k \in \Z$ 时，级数收敛于 $\frac{\pi}{2}$.
+ 	
+	\newpage
+	\thispagestyle{empty}
+	\begin{center}
+		\parbox[c][\textheight][c]{1cm}{\centering\fontsize{40}{36}\selectfont\textbf{线性代数}}
+	\end{center}
+	
+	
+	\newpage
+	\section{线性方程组的消元法、矩阵}
+	
+	让我们先从解线性方程组讲起。初中阶段，我们学习了解一元、二元乃至三元的线性方程组基本解法。一般地，我们会使用消元法来求解。其基本思想是通过一系列的变换，将方程组化简为更简单的形式，最终得到方程组的解。我们可以通过交换方程的顺序、加减方程等操作来实现这一点。然而，我们所遇到的线性方程组几乎都拘泥于方程个数等于未知数个数的情况，而且一般最后只会得到一个解。
+
+	这显然不是线性方程组的全部。方程的解的定义是：使得方程所描述的等式成立的未知数值。试想，对于方程组：
+	
+	\begin{equation*}
+		\begin{cases}
+			x + y - z &= 1 \\
+			x - y + 2z &= 2 
+		\end{cases}
+	\end{equation*}
+	
+	必然有使得方程成立的未知数值。如 $x = 1, y = 1, z = 1$，又如 $x = 2, y = -2, z = -1$，依此类推，每找到一个 $x$ 值，我们都能找到一个 $y$ 值、一个 $z$ 值使得上述方程成立。也就是说，\textbf{上述方程有无穷多解}。于是，针对线性方程组，我们提出两个问题：
+	\begin{itemize}
+		\item 线性方程组具有解的情况是什么样的？
+		
+		\item 如何求出某线性方程组的所有解？
+	\end{itemize}
+	线性代数的课程，就是从这里开始的。\textbf{在这里我提醒读者：}线性代数的讨论过程是从一个内容到另一个内容的过程，在最后你会发现这些内容的本质是一致的。因此，当你发现某一个问题很难理解的时候，不妨继续读下去，或许你很快就会理解其内涵。
+	
+	让我们回到消元法的思想。当我们在求方程的一个解时，我们完全是针对各个未知量的系数做操作的，而对于各个未知量，我们并没有做特殊操作。因此，我们可以将其系数单独写成一个表格。以方程组：
+	\begin{equation*}
+		\begin{cases}
+			x_1 + x_2 - x_3 &= 1 \\
+			x_1 - x_2 + x_3 &= 2 \\
+			x_1 - x_2 - x_3 & = -1
+		\end{cases}
+	\end{equation*}
+	为例，其表格可写成：
+	\[
+	\begin{pmatrix}
+		1 & 1 & -1 \\
+		1 & -1 & 2 \\
+		1 & -1 & -1
+	\end{pmatrix}
+	\]
+	我们为这个表格起一个名字，叫\textbf{矩阵}。显然，矩阵的一行就描述了一个方程全部未知量的系数。那么，消元法的过程，就是对这个矩阵做\textbf{行变换}的过程。矩阵有行和列之分，根据最一开始我们描述的方程组可知，矩阵的行数和列数显然是不一定相等的。对于一个 $n$ 行 $m$ 列的矩阵，我们可以将其记作 $A_{n \times m}$，其第 $i$ 行第 $j$ 列的元素可记为 $A_{ij}$。
+	
+	通过我们消元法的操作，我们可以定义矩阵的\textbf{初等行变换}：
+	
+	\begin{itemize}
+		\item 将矩阵的某一行直接乘以一个不为 $0$ 的数。
+		
+		\item 将矩阵的某一行乘以一个不为 $0$ 的数的结果加到另外一行。
+		
+		\item 交换矩阵的两行。
+	\end{itemize}
+	显然，上述三种操作都是消元法的基本操作，并不会对线性方程组的解有什么影响。同理，我们可以定义\textbf{初等列变换}。但是初等列变换显然对于解线性方程组来说没什么意义。
+	
+	在定义了系数矩阵之后，我们该如何表示上述的线性方程组呢？在这里我们引入向量的定义：向量是一种既有大小又有方向的量，一般用 $\vec{a}$ 表示。其大小用 $||\vec{a}||$ 表示，唤作向量的\textbf{模}。向量有行向量和列向量之分。从字面上区分，行向量就是横着写，列向量就是竖着写。行向量经过转置（Transform）操作就变成列向量，即：
+	\[
+	\begin{pmatrix}
+		1 & 1 & -1
+	\end{pmatrix}^T = 
+	\begin{pmatrix}
+		1 \\ 1 \\ -1\\
+	\end{pmatrix}
+	\]
+	
+	我们高中学过的向量的运算包括：向量加法、向量数乘、向量数量积（内积）。
+	
+	\textbf{向量可看作是一种矩阵}，矩阵 $A_{n \times m}$ 也可看作是可以看做是 $n$ 个行向量拼在一起或 $m$ 个列向量拼在一起。
+	
+	接下来定义矩阵的乘法：
+	假设有两个矩阵 $A_{n \times m}$ 和 $B_{m \times p}$，则其乘积 $C_{n \times p}$ 的元素 $c_{ij}$ 可以表示为
+	\begin{align*}
+		c_{ij} = \sum_{k=1}^{m} a_{ik} \cdot b_{kj}
+	\end{align*}
+	其中 $a_{ik}$ 是矩阵 $A$ 的第 $i$ 行第 $k$ 列的元素，$b_{kj}$ 是矩阵 $B$ 的第 $k$ 行第 $j$ 列的元素。也就是说，矩阵的乘法是将左矩阵的各行元素和右矩阵的各列元素按位置相乘并将结果相加。\textbf{当且仅当左矩阵的行数等于右矩阵的列数的时候，该操作才可以进行。结果矩阵的行数等于左矩阵的行数，列数等于右矩阵的列数}。
+	
+	举例来说，如果有 $A_{2 \times 2}, B_{2 \times 2}$，它们的乘积 $C = AB$ 可以通过以下方式计算：
+	\[
+	C = 
+	\begin{bmatrix}
+		a & b \\
+		c & d \\
+	\end{bmatrix}
+	\begin{bmatrix}
+		e & f \\
+		g & h \\
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		ae + bg & af + bh \\
+		ce + dg & cf + dh \\
+	\end{bmatrix}
+	\]
+	
+	这时你可能会疑惑：按照上述的定义，高中学到的向量数量积 $(1, 1, 1) \cdot (1, 1, 1)$ 难道不可计算了吗？非也。我们高中学到的数量积，其本质是一个行向量和一个列向量相乘：
+	\[
+	\begin{pmatrix}
+		1 & 1 & 1
+	\end{pmatrix} \cdot
+	\begin{pmatrix}
+		1 \\ 1 \\ 1\\
+	\end{pmatrix}
+	\]
+	最终结果显然是一个 $1 \times 1$ 的向量，也就是一个数。
+	
+	让我们回到解线性方程组的话题。有了矩阵乘法的定义，设系数矩阵为 $A$，未知数矩阵为列向量 $\vec{x} = (x_1, x_2, x_3)^T$，上述线性方程组就可以写成 $A\vec{x} = \vec{b}$，其中 $A$ 和 $\vec{x}$ 之间的作用是矩阵乘法，$\vec{b}$ 为等号右边的值所组成的列向量 $(1, 2, -1)^T$。
+	
+	实际上，在对一行做变换的时候，原等式等号右侧的值也要变化。于是我们不妨也把等号右边的值写出来：
+	\[
+	\begin{pmatrix}
+		1 & 1 & -1 & 1\\
+		1 & -1 & 2 & 2 \\
+		1 & -1 & -1 & -1
+	\end{pmatrix}
+	\]
+	上面的新矩阵显然可以表示为 $(A, \vec{b})$，叫原线性方程组的\textbf{增广矩阵}。
+	
+	那么该如何对矩阵做变换呢？我们的思路是：将矩阵变成上三角形式或者下三角形式。上述增广矩阵可以通过初等行变换变成如下的上三角形式：
+	\[
+	\begin{pmatrix}
+		1 & 1 & -1 & 1\\
+		0 & -2 & 3 & 1 \\
+		0 & 0 & -3 & -3
+	\end{pmatrix}
+	\]
+	随后由最后一行可得 $x_3 = 1$，然后向上类推，可求得 $x_1 = 1, x_2 = 1$。在实际求解过程中，上三角或下三角形式是我们喜闻乐见的。
+	
+	同样地，对于我们一开始描述的方程组：
+	\begin{equation*}
+		\begin{cases}
+			x_1 + x_2 - x_3 &= 1 \\
+			x_1 - x_2 + 2x_3 &= 2 
+		\end{cases}
+	\end{equation*}
+	其增广矩阵为：
+		\[
+	\begin{pmatrix}
+		1 & 1 & -1 & 1\\
+		1 & -1 & 2 & 2 \\
+	\end{pmatrix}
+	\]
+	
+	该矩阵可通过初等行变换得上三角形式：
+		\[
+	\begin{pmatrix}
+		1 & 1 & -1 & 1\\
+		0 & -2 & 3 & 1 \\
+	\end{pmatrix}
+	\]
+	在这时，显然有 $-2x_2 + 3x_3 = 1$，于是 $x_3 = \frac{1 + 2x_2}{3}$，$x_1 = 1 + x_3 - x_2 = \frac{4  - x_2}{3}$，于是解为：$(\frac{4  - x_2}{3}, x_2,  \frac{1 + 2x_2}{3})^T, x_2 \in \R$，每得到一个 $x_2$，都会有一个解。这是因为 $x_1, x_3$ 都能被 $x_2$ 函数表示。
+	
+	插播一下，“线性”这个词来源于什么呢？其本质就是——变量的幂为 $1$。如果 $x_1, x_2$ 为轴形成了一个二维平面，那么当 $x_1, x_2$ 的次数为 $1$ 时，所得的曲线 $ax_1 + bx_2 = c$（$a, b$ 不同时为 $0$）的图像为一条直线；推广到三维空间，曲面 $ax_1 + bx_2 + cx_3 = d$（$a, b, c$ 不同时为 $0$）的图像为一个平面。这就是“线性”的几何解释。
+	
+	\newpage
+	\section{向量空间}
+	
+	依然要从解线性方程组说起。假设方程个数为 $n$，未知数个数为 $m$，如果把方程组的系数矩阵看成是 $m$ 个列向量组成的二维向量，其又会具有什么含义呢？
+	
+	设这 $m$ 个列向量分别是 $\vec{v_1}, \vec{v_2}, \cdots, \vec{v_m}$，则系数矩阵 $A = (\vec{v_1},\vec{ v_2}, \cdots, \vec{v_m})$。于是解线性方程组 $A\vec{x} = \vec{b}$ 的过程就可以理解为：寻找 $\vec{x} = (x_1, x_2, \cdots, x_m)$，使得 $\sum \limits_{i = 1}^m \vec{v_i} x_i = \vec{b}$，那么这实际上就可以理解为：有一组向量 $\vec{v_i}$ 和一个向量 $\vec{b}$，我们要寻找一组实数，使得 $\vec{b}$ 可以表示成这些 $v_i$ 向量依次数乘再相加的形式。
+	
+	\vspace{12pt}
+	
+	$\mathfrak{Def}$（\textbf{线性组合}）：若存在一组实数 $\vec{x} = (x_1, x_2, \cdots, x_m)^T$，对于向量组 $A = (\vec{v_1}, \vec{ v_2}, \cdots, \vec{v_m})$ 和向量 $\vec{b} = (b_1. b_2, \cdots, b_m)^T$，有 $A\vec{x} = \vec{b}$，则称 $\vec{b}$ 可以表示为向量组 $A$ 的一个\textbf{线性组合}。 其中线性组合的系数就是 $\vec{x}$。
+	
+	\vspace{12pt}
+	
+	于是上面的问题就变成：我有了向量组 $A$，那么某一向量 $\vec{b}$ 是否可以表示成 $A$ 的线性组合？如果能，则线性方程组有解；不能则无解。
+	
+	为了探究上面的问题，我们先来想象一个集合 $\mathbb{D}$，如果 $\mathbb{D}$ 是向量组 $A$ \textbf{所有线性组合}形成的向量的集合，则如果 $\vec{b} \in \mathbb{D}$，则向量 $\vec{b}$ 可以表示成 $A$ 的线性组合，方程组有解。我们定义 $\mathbb{D}$ 叫向量组 $A$ 形成的\textbf{向量空间}。
+	
+	\vspace{12pt}
+	
+	\ding{向量空间}{对于向量组 $A = (\vec{v_1}, \vec{ v_2}, \cdots, \vec{v_m})$，集合 $\mathbb{D}$ = \{$\vec{b} = \sum \limits_{i = 1}^m x_i \vec{v_i}$ | $x \in \mathbb{R}$\} 为 $A$ 形成的\textbf{向量空间}。}
+	
+	\vspace{12pt}
+	
+	针对向量空间，我们可以想象以下内容：
+	
+	\begin{itemize}
+		\item 二维实数域 $\R^2$ 可以是由向量组 $\{(1, 0)^T, (0,1)^T\}$ 形成的向量空间，也可以是由 $\{(1, 0)^T, (1,1)^T\}$ 形成的向量空间。
+		
+		\textbf{证明：}前者是显然的，只证明后者。设两个向量的系数分别为 $x_1, x_2 \in \R$，则只需证向量 $(x_1 + x_2, x_2)$ 可以取尽 $\R^2$ 的所有点。反证：假设向量 $(x_1 + x_2, x_2)$ 不能取尽 $\R^2$ 的所有点，则 $\exists (x_{1n}, x_{2n}) \in \R^2$ 使得 $x_2 = x_{2n}$ 时，$x_1 + x_2 \ne x_{1n}$，即 $x_1 \ne x_{1n} - x_{2n}$。由于 $\R^2$ 对加法运算的封闭性，$x_{1n} - x_{2n} \in \R$，故 $x_1$ 可以取到 $x_{1n} - x_{2n}$，出现矛盾。原命题得证。
+		
+		\item 如果删除 $A$ 中的一些向量，或者加上一些新向量，其形成的向量空间可能是 $\mathbb{D}$，也可能不是 $\mathbb{D}$。例如，在上一条中，添加向量 $(0, 0)^T$，其形成的向量空间还是 $R^2$；而对于 $B = \{(1, 0, 0)^T, (0, 1, 0)^T\}$ 形成的向量空间 $\mathbb{B}$，显然 $\mathbb{B}$ 是三维实数域 $\R^3$ 的真子集（第 $3$ 个分量为 $0$），如果添加新向量 $(0, 0, 1)^T$，则形成的空间就不再是 $\mathbb{B}$，而是 $\R^3$。删除的情况同理。
+	\end{itemize}
+	
+	根据上述想象可知，必然\textbf{存在}一个 $m$ 维向量组生成的向量空间正好是 $m$ 维实数域 $\R^m$；也必然\textbf{存在} $k \ge m$，使得向量组 $A_{m \times k}$ 所形成的向量空间是 $\R^m$。“存在”显然不是“任意”，因此我们希望探究：如果任给一个 $m$ 维向量组，如何判断其形成的向量空间是否为 $\R^m$ 呢？
+	
+	结合解线性方程组的想法，易知：如果我们想要保证某 $m$ 维向量组形成的向量空间是 $\R^m$，就一定要保证其化为阶梯型（上三角）后每一行都有不为 $0$ 的值。
+	
+	\vspace{12pt}
+	
+	\ding{主元列}{对于一个阶梯型矩阵，设其有 $k$ 个存在非 $0$ 值的行（称为有元行），对于每一有元行，选定 $1$ 个本身不为 $0$ 而下方元素都为 $0$ 的列，共 $k$ 列，这些列构成了一个\textbf{主元列组}。例如，对于 $3$ 维向量组：
+	\[
+	\begin{pmatrix}
+		1 & 1 & 0 & 1 & 1 \\
+		0 & 1 & 1 & 2 & 1 \\
+		0 & 0 & 0 & 0 & 1 \\
+	\end{pmatrix}
+	\]
+	我们可以说第 $1$ 列，第 $2$ 列，第 $5$ 列构成一个主元列组，此时第 $3, 4$ 列都是非主元列；也可以说第 $1$ 列，第 $3$ 列，第 $5$ 列构成一个主元列组，此时第 $2, 4$ 列都是非主元列。其形成的向量空间是 $\R^3$，这是一个主元列组的功劳。即：如果我们讲一个非主元列组去除，则其形成的空间还是 $\R^3$。
+	}
+ 	
+	\vspace{12pt}
+	
+	也就是说，对于 $m$ 维向量组 $A$，如果其有 $m$ 个主元列，则其能形成的向量空间就是 $\R^m$。到这里，我们基本厘清了能够形成 $m$ 维实数域的 $m$ 维向量组的性质。即：当且仅当某 $m$ 维向量组有 $m$ 个主元列，其形成的向量空间是 $\R^m$。我们将上述的一个主元列组称为 $\R^m$ 的一个\textbf{基底}。
+	
+	然而，并不是所有 $m$ 维向量组都能形成 $m$ 维实数域。当其主元列数小于 $m$ 时，其形成的向量空间是 $\R^m$ 的一个真子集。接下来，我们就要讨论这种情况。
+	
+	在讨论之前，我们要引入一个新的视角，叫“线性变换”。
+		
+	\vspace{12pt}
+	
+	\ding{线性变换}{对于映射 $\vec{f}: \R^n \to \R^m$，如果映射保留加法和数乘运算，即：$\vec{f}(\alpha \vec{a} + \beta \vec{b}) = \alpha \vec{f}(\vec{a}) + \beta \vec{f}(\vec{b})$，则其是一个\textbf{线性变换}。}
+	
+	\vspace{12pt}
+
+	请注意：映射的概念并不要求值域 $R_{\vec{f}} = \R^m$，只要求 $R_{\vec{f}} \subset \R^m$。根据上边的定义，一个任意的 $\R^n$ 中的向量： 
+	\begin{equation*}
+		\begin{split}
+			\vec{x} = (x_1, x_2, \cdots, x_n)^T = x_1(1,0, \cdots, 0)^T + x_2(0, 1, 0, \cdots,0)^T + \cdots + x_n(0,\cdots, 0, 1)^T \\ 
+			 = x_1 \vec{\xi_1} + x_2 \vec{\xi_2} + \cdots + x_n \vec{\xi_n}
+		\end{split}
+	\end{equation*}
+	 应当变成：$x_1 \vec{f}(\vec{\xi_1}) + x_2 \vec{f}(\vec{\xi_2}) + \cdots + x_n \vec{\xi_n}$。而此式又可以化为矩阵乘法的形式：
+	 \begin{equation*}
+	 	(\vec{f}(\vec{\xi_1}), \vec{f}(\vec{\xi_2}), \cdots, \vec{f}(\vec{\xi_n})) (x_1, x_2, \cdots, x_n)^T.
+	 \end{equation*}
+	   
+	 不妨令矩阵 $A_{n \times m} = (\vec{f}(\vec{\xi_1}), \vec{f}(\vec{\xi_2}), \cdots, \vec{f}(\vec{\xi_n}))$，其中 $\vec{f}(\vec{\xi_i}) \in \R^m, i = 1, 2, \cdots, n$，那么 $\vec{x}$ 经过线性变换就变成了 $A\vec{x}$。设线性变换的结果是 $\vec{b} \in \R^m$，这不就是 $A\vec{x} = \vec{b}$ 了吗？这也就是说，线性变换的本质是矩阵 $A_{n \times m}$ 左乘了向量 $\vec{x} \in \R^n$，其中矩阵 $A$ 的第 $i$ 列是 $\vec{\xi_i}$（第 $i$ 列为 $1$，其余列均为 $0$ 的列向量） 经映射 $\vec{f}$ 变换的结果，其中 $i = 1, 2, \cdots, m$。
+	 
+	 举例来说，坐标轴的旋转就是一种线性变换。以二维的情况为例，其可以看作 $f: \R^2 \to \R^2$ 的映射。假设两个坐标轴同时逆时针旋转了 $\theta$ 角，则该线性变换的矩阵 $A$ 为：
+	 \[
+	 \begin{pmatrix}
+	 	\cos \theta & -\sin \theta \\
+	 	\sin \theta & \cos \theta
+	 \end{pmatrix}
+	 \]
+	即：对于点 $(1, 2)$，其变换过后的点为 $(\cos \theta - 2 \sin \theta, \sin \theta + 2 \cos \theta)$。
+	
+	上面的例子举的是坐标轴同时向一个方向旋转的结果。实际上，多坐标轴各自向不同的方向旋转也可以做到上述的线性变换效果。以容易理解的方式来说，线性变换前的 $\R^n$ 空间可以看作一个一个的小矩形块，线性变换就是将这些小矩形块做旋转、平移、拉伸的过程，结果是：其依然满足类似于平行四边形的性质，而非线性变换则不保留类似于平行四边形的性质。例如，对于线性变换，若变换前若 $A, B$ 两点间距离等于 $C, D$ 两点间距离，线性变换后，距离的实际值可能会变化，但$A, B$ 两点间距离必然还会等于 $C, D$ 两点间距离；而在非线性变换后，$A, B$ 两点间距离可能就会不等于 $C, D$ 两点间距离。
+	
+	依然以二维坐标轴的旋转为例。我们不可否认的是，必然存在这样的情况：在两个坐标轴各自旋转一定角度之后，二者重合。也就是说——\textbf{线性变换后的空间可能会变小}。
+	
+	为了研究清楚这一性质，我们引入线性相关和线性无关的定义：
+	
+	\vspace{12pt}
+	
+	\ding{线性相关}{对于向量组 $A = (\vec{v_1}, \vec{v_2}, \cdots, \vec{v_n})$，如果存在一组不全为 $0$ 的数 $\vec{x} = (x_1, x_2, \cdots, x_n)^T$，使得 $A\vec{x} = \vec{0}$，则称这个向量组\textbf{线性相关}。}
+		
+	\ding{线性无关}{对于向量组 $A = (\vec{v_1}, \vec{v_2}, \cdots, \vec{v_n})$，如果不存在一组不全为 $0$ 的数 $\vec{x} = (x_1, x_2, \cdots, x_n)^T$，使得 $A\vec{x} = \vec{0}$，则称这个向量组\textbf{线性无关}。即：方程 $A\vec{x} = \vec{0}$ 只有零解时，$A$ 的向量组线性无关。}
+	
+	\vspace{12pt}
+	
+	然后我们引入子空间的定义：
+	
+	\vspace{12pt}
+	
+	\ding{子空间}{设向量组 $A = (\vec{v_1}, \vec{v_2}, \cdots, \vec{v_n})$ 张成的向量空间是 $\mathbb{A}$，则其中任意 $k$ 个向量（$1 \le k \le n$）所张成的空间 $\mathbb{A}_k$  如果满足：1. 对加法和数乘封闭；2. $\vec{0}$ 在空间中，则称 $\mathbb{A}_k$ 为 $\mathbb{A}$ 的\textbf{子空间}。可以证明：$\mathbb{A}_k \subset \mathbb{A}$。}
+	
+	\vspace{12pt}
+	
+	
+	\textbf{结论：}如果线性变换矩阵 $A$ 的列向量组线性相关，则变换之后维度降低。
+	
+	\textbf{证明：}假设线性变换矩阵 $A$ 的列向量组是 $\{\vec{v_1}, \vec{v_2}, \ldots, \vec{v_n}\}$，
+	
+	由线性相关得：存在不全为零的系数向量 $\vec{x} = (x_1, x_2, \ldots, x_n)^T$ 使得 $A\vec{x} = \vec{0}$。
+	
+	于是有：
+	\[ x_1 \vec{v_1} + x_2 \vec{v_2} + \ldots + x_n \vec{v_n} = \vec{0} \]
+	
+	由于 $\vec{x}$ 不全为零，至少存在一个 $x_i \neq 0$。不妨令 $x_1 \neq 0$，那么可以解出 $\vec{v_1}$：
+	\[ \vec{v_1} = -\frac{x_2}{x_1} \vec{v_2} - \ldots - \frac{x_n}{x_1} \vec{v_n} \]
+	
+	这意味着 $\vec{v_1}$ 可以表示为其他向量的线性组合，即 $\vec{v_1}$ 落在由其他向量张成的子空间中。因此，如果线性变换矩阵 $A$ 的列向量组线性相关，则变换之后的维度会降低。
+	
+	值得一提的是，如果线性变换矩阵的向量组是线性无关的，其并不会造成空间维数的降低，即：生成的空间就是 $\R^m$。此时 $A\vec{x} = \vec{0}$ 只有零解。可以推出，线性无关应等价于线性变换矩阵 $A_{n \times m}$ 经初等行变换后得到的矩阵有 $m$ 个主元列，正如之前所言，这些主元列可以形成一个 $\R^m$ 的基底。这当然是一个非常好的性质，所以我们不多做讨论。
+	
+	\newpage
+	\section{矩阵的秩}
+	接下来我们继续讨论线性相关的情形。我们已经知道，对于一个线性相关的向量组 $A_{n \times m}$，其形成的映射 $f_{A}: \R^n \to \R^m$ 并不是满射，所得到的空间只是 $\R^m$ 的一个真子集。那么这个真子集空间又有什么性质？
+	
+	首先我们思考：这个线性相关的向量组能否通过去除一些向量变成线性无关的向量组？答案是：只要线性变换矩阵不是零阵，则是肯定的。也就是说，如果某个向量 $\vec{x_i}$ 可以被其他向量线性表示，即：存在一组不全为零的常数 $c_1, c_2, \cdots, c_n$，有 $\vec{x_i} = c_1\vec{x_1} + c_2\vec{x_2} + \cdots + c_{i - 1}\vec{x}_{i - 1} + c_{i +1}\vec{x}_{i +1} + \cdots + c_n\vec{x_n}$，那么 $\vec{x}_i$ 就是可以被去除的。通过上述方法，我们最后总能得到一组线性无关的向量。
+	
+	接下来我们继续思考：这组线性无关的向量的个数是否确定？答案是：当然也是确定的。我们可以试着证明一下：
+	
+	\textbf{证明：}反证：设线性相关的向量组 $A$，其包含 $m$ 个向量，若其经上述剔除操作可以得到两个不同的线性无关的向量组 $B$ 和 $C$，它们的向量个数分别为 $r$ 和 $s$，且 $r \neq s$。因为 $B$ 和 $C$ 都是线性无关的，所以它们的向量组合起来不应该包含任何多余的向量。不妨令 $r < s$，那么 $C$ 中必然有 $B$ 中没有的向量。
+	
+	设 $\vec{c}$ 是一个 $C$ 有 $B$ 没有的向量，根据线性无关的定义：
+	
+	
+	
+	\subsection*{二、行列式}
+	
+	行列式具有以下基本知识：
+	\begin{itemize}
+		\item 行列式可以理解为一个映射，将矩阵映射到一个数，即 $f: \R^n \to \R$.
+		
+		\item 设 $a_{ij}$ 的余子式为 $M_{ij}$，则其代数余子式 $A_{ij} = (-1)^{i + j} M_{ij}$.
+		
+		\item Vandermonde 行列式：
+		\[ V_n = 
+		\begin{vmatrix}
+			1 & x_1 & x_1^2 & \cdots & x_1^{n-1} \\
+			1 & x_2 & x_2^2 & \cdots & x_2^{n-1} \\
+			\vdots & \vdots & \vdots & \ddots & \vdots \\
+			1 & x_n & x_n^2 & \cdots & x_n^{n-1}
+		\end{vmatrix}
+		 = \prod \limits_{1 \le j \le i \le n} (x_i - x_j)
+		\] 
+		
+		其中显然 $V_n \ne 0 \iff \forall i, j(1 \le j \le i \le n), x_i \ne x_j$.
+		
+		\item 分块行列式：
+		$$
+		D = \left | \begin{matrix}
+			A & 0 \\
+			0 & B 
+		\end{matrix} \right | =  \left |
+		 \begin{matrix}
+			A & 0 \\
+			C & B 
+		\end{matrix} \right | = \left |
+		\begin{matrix}
+			A & D \\
+			0 & B 
+		\end{matrix} \right | = 
+		|A||B|.
+		$$
+		
+		\item Laplace 法则：对矩阵 $A_{n \times n}, B_{n \times n}$，有 $|AB| = |A||B|$.
+		
+		\item 一般地，在我们计算行列式的时候，会将其化成上三角/下三角，或做降阶操作。
+	\end{itemize}
+	
+	
+	
+	\vspace{12pt}
+	
+	\textbf{例1：}求
+	$$
+	D = \left | \begin{matrix}
+		x - 1 &2   & -1 \\
+		3 & 2x - 1 & x + 2  \\
+		5 & x & x + 3 \\
+	\end{matrix} \right | 
+	$$
+	中，$x^2$ 的系数。
+	
+	\textbf{解：}当且仅当第一行取 $x - 1$ 时，可以构造 $x$ 的二次形式。即：在以下展开中，
+	
+	\begin{center}
+		\resizebox{0.34\textwidth}{!}{
+		\begin{tikzpicture}[scale = 0.1, ->,>=stealth',shorten >=0.5pt,auto,node distance=2cm,
+			thick,main node/.style={font=\sffamily\normalsize\bfseries}]
+			
+			\node[main node] (1) {$x - 1$};
+			\node[main node] (2) [below of=1, yshift = -2cm] {$2$};
+			\node[main node] (3) [below of=2, yshift = -2cm] {$-1$};
+			\node[main node] (4) [above right of=1, yshift = 1pt] {$2x - 1$};
+			\node[main node] (5) [right of=4] {$x + 3$};
+			\node[main node] (6) [below right of=1, yshift = -1pt] {$x + 2$};
+			\node[main node] (7) [right of=6] {$x$};
+			\node[main node] (8) [above right of=2, yshift = 1pt] {$3$};
+			\node[main node] (9) [right of=8] {$x + 3$};
+			\node[main node] (10) [below right of=2, yshift = -1pt] {$x + 2$};
+			\node[main node] (11) [right of=10] {$5$};
+			\node[main node] (12) [above right of=3, yshift = 1pt] {$3$};
+			\node[main node] (13) [right of=12] {$x$};
+			\node[main node] (14) [below right of=3, yshift = -1pt] {$2x - 1$};
+			\node[main node] (15) [right of=14] {$5$};
+			\node[main node] (16) [right of=5] {$(1)$};
+			\node[main node] (17) [right of=7] {$(2)$};
+			\node[main node] (18) [right of=9] {$(3)$};
+			\node[main node] (19) [right of=11] {$(4)$};
+			\node[main node] (20) [right of=13] {$(5)$};
+			\node[main node] (21) [right of=15] {$(6)$};
+			
+			\path[every node/.style={font=\sffamily\small}]
+			(1) edge[->] node {} (4) 
+			(1) edge[->] node {} (6)
+			(2) edge[->] node {} (8)
+			(2) edge[->] node {} (10)
+			(3) edge[->] node {} (12)
+			(3) edge[->] node {} (14)
+			(4) edge[->] node {} (5)
+			(6) edge[->] node {} (7)
+			(8) edge[->] node {} (9)
+			(10) edge[->] node {} (11)
+			(12) edge[->] node {} (13)
+			(14) edge[->] node {} (15);
+			
+		\end{tikzpicture}
+	}
+	\end{center}
+	只有 $(1), (2)$ 有机会展出 $x^2$，求即可，注意负号。
+	
+	\vspace{12pt}
+	
+	\textbf{例2：}已知 $A_{3 \times 3} = (\al_1, \al_2, \be_1), B_{3 \times 3} = (\alpha_1, \alpha_2, \be_2)$，$|A| = 2, |B| = 1$，求 $|2A + 3B|$.
+	
+	\textbf{解：} $2A + 3B = (5\al_1, 5\al_2, 2\be_1 + 3\be_2)$,
+	
+	所以 $|2A + 3B| = |5\al_1, 5\al_2, 2\be_1 + 3\be_2| = 50|A| + 75|B| = 175$.
+	
+	
+	\newpage
+	\thispagestyle{empty}
+	\begin{center}
+		\parbox[c][\textheight][c]{1cm}{\centering\fontsize{40}{36}\selectfont\textbf{概率论与数理统计}}
+	\end{center}
+	
+	\newpage
+	
+	\section{事件的独立性}
+	
+	\begin{itemize}
+		\item 事件的独立，意味着：$P(AB) = P(A)P(B)$。
+		
+		\item 随机变量的独立，意味着：多个随机变量的联合概率密度函数，等于各随机变量边缘概率密度的乘积。
+		
+		\item 协方差 $Cov(X, Y)$ 可确定相关性\footnote{一般地，我们谈到相关性，指的都是线性相关性。对于 $Y = \sin X$，虽然 $Y$ 和 $X$ 也有很强的相关性，但是其协方差应当为 $0$.}。协方差为正，有一定的线性正相关性；为负，有一定的线性负相关性；为 0，不线性相关。求法：
+		
+		\begin{equation*}
+			Cov(X, Y) = E(XY) - E(X)E(Y)
+		\end{equation*}
+		
+		线性不相关时，显然有：$E(XY) = E(X)E(Y)$，此时只能说二者线性不相关，无法得出其他结论。
+		
+		\item 随机变量独立 $\rightarrow$ 随机变量不相关，其余关系都不一定成立。
+		
+		\item 相关系数 $\rho = \frac{Cov(X, Y)}{\sigma(X) \sigma(Y)}$，此值为正，正相关；为负，负相关。其值的意义是把协方差归约到 $[-1, 1]$ 之间。
+	\end{itemize}
+	
+	
+	
+	\newpage
+	\section{}
+	
+\end{document}
